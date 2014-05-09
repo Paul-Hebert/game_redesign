@@ -1,0 +1,35 @@
+#screen{
+	width:900px;
+	height:600px;
+	overflow:hidden;
+	border:3px solid #000;
+	position:absolute;
+}
+
+#background, #background img{
+	height:100%;
+	width:auto;
+	position:absolute;
+}
+
+#player{
+	position:absolute;
+	width:60px;
+	height:60px;
+	background:#000;
+}
+
+.platform{
+	position:absolute;
+	border:2px solid #000;
+}
+
+.goal{
+	position: absolute;
+	width:30px;
+	height:30px;
+	background: gold;
+	border:1px red dashed;
+	border-radius:50%;
+}
+
