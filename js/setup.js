@@ -8,11 +8,11 @@ var obstacleNumber = 0;
 
 i = 0;
 
-//	Positioning vars
+
 $(function(){
+	//	Positioning vars
 	backPositionX = 0;
 	backPositionY = 0;
-
 
 	playerPositionX = 300;
 	playerPositionY = 560;
@@ -22,9 +22,21 @@ $(function(){
 	userInput = false;
 	updated = true;
 
-	backWidth = $("#currentBG").width();
+	backWidth = $(".currentBG").width();
 	screenWidth = $("#screen").width();
 	screenHeight = $("#screen").height();
+
+	//	Character status vars
+	playerSpeed = 3;
+
+	jumping = 0;
+	jumpVal = 5;
+	jumpLength = 60;
+
+	collision = false;
+	collisionTop = false;
+	gravityVal = 1;
+	gravityChange = .3;
 });
 
 //****************************************************************************************//
@@ -58,15 +70,16 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type){
     defineProperty(platforms[i], 'heightVal',heightVal);
     defineProperty(platforms[i], 'type', type);
 
+    obstacleNumber++;
+
+  /* Outlines objects for level creation and testing.
   input = document.createElement('div');
   	input.style.top = platforms[i].yVal + 'px';
   	input.style.left = platforms[i].xVal + 'px';
   	input.style.width = platforms[i].widthVal + 'px';
   	input.style.height = platforms[i].heightVal + 'px';	
     input.className = platforms[i].type;
-    document.getElementById('background').appendChild(input);
-    obstacleNumber++;
-
+    document.getElementById('background').appendChild(input);*/
 }
 
 //	Send platform data to functions on load.
@@ -80,5 +93,8 @@ $(function() {
     i++;
 	createObject(i,773,233,212,133,'platform');
     i++;
-	createObject(i,800,175,40,40,'goal');
+	createObject(i,853,160,60,60,'goal');
 });
+
+level=1;
+instructionNumber = 0;

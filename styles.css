@@ -12,11 +12,48 @@
 	position:absolute;
 }
 
+.front{
+	z-index: 5;
+}
+
+.back{
+	z-index: 0
+}
+
+#instructions{
+	z-index:6;
+	position: absolute;
+	top:50px;
+	left:50px;
+	width:500px;
+	display:none;
+}
+
+.key{
+	padding:5px;
+	padding-left:10px;
+	padding-right:10px;
+	background:#ccc;
+	border: 2px solid #000;
+	border-bottom: 4px solid #000;
+	border-top:1px solid #000;
+	border-radius: 5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-o-border-radius:5px;
+}
+
+#goalText{
+	height:30px;
+	width:30px;
+}
+
 #player{
 	position:absolute;
 	width:60px;
 	height:60px;
 	background:#000;
+	z-index:1;
 }
 
 .platform{

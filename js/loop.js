@@ -1,15 +1,19 @@
 //  Update 
     function updateGame(){
         collisionTest();
+        jump();
+        instructions();
         if (userInput != true){
             if (map[68]){
-                horizontal(-3);
+                horizontal(-playerSpeed);
             }
             if (map[65]){
-                horizontal(3);
+                horizontal(playerSpeed);
             }
             if (map[87]){
-                jump();
+                if (collisionTop == true && jumping == 0){
+                    jumping = 1;
+                }
             }
         }
     }
