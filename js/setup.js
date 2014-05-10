@@ -30,13 +30,13 @@ $(function(){
 	playerSpeed = 3;
 
 	jumping = 0;
-	jumpVal = 5;
+	jumpVal = 4.5;
 	jumpLength = 60;
 
 	collision = false;
 	collisionTop = false;
 	gravityVal = 1;
-	gravityChange = .3;
+	gravityChange = .7;
 });
 
 //****************************************************************************************//
@@ -85,13 +85,13 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type){
 //	Send platform data to functions on load.
 
 $(function() {
-	createObject(i,0,558,592,60,'platform');
+	createObject(i,0,563,592,60,'platform');
     i++;
-	createObject(i,337,339,220,95,'platform');
+	createObject(i,337,344,220,90,'platform');
     i++;
-	createObject(i,805,555,190,60,'platform');
+	createObject(i,805,560,190,60,'platform');
     i++;
-	createObject(i,773,233,212,133,'platform');
+	createObject(i,773,238,212,128,'platform');
     i++;
 	createObject(i,853,160,60,60,'goal');
 });

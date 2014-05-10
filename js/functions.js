@@ -27,7 +27,7 @@ $(document).keydown(function(e) {
     if(backPositionX <= 0 && backPositionX >= screenWidth - backWidth){
         //  If the player's in the middle move the map.
         if ((playerPositionX == (screenWidth/2)-30)){
-            backPositionX += speed;
+            backPositionX += speed * 2;
             // If the map is past the left edge, move the map to the left edge, and move the player instead.
             if(backPositionX > 0){
                 backPositionX = 0;
@@ -90,7 +90,7 @@ $(document).keydown(function(e) {
         if (playerPositionY >= yVal-2 && playerPositionY <= yVal2 + 60 && overallPositionX >= xVal - 60 && overallPositionX <= xVal2){
             collision = true;
             //Check to see if the collision is with the top border.
-            if (playerPositionY - 60 < yVal){
+            if (playerPositionY - 30 < yVal){
                 collisionTop = true;
             }
             //  If collided platform is the goal, win the game.
