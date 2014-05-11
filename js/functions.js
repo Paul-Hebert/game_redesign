@@ -23,29 +23,38 @@ $(document).keydown(function(e) {
 
 
  function horizontal(speed){
-    //  If we're not past the left edge and not past the right edge check the player's position.
-    if(backPositionX <= 0 && backPositionX >= screenWidth - backWidth){
-        //  If the player's in the middle move the map.
-        if ((playerPositionX <= (screenWidth/2)-25)&&(playerPositionX >= (screenWidth/2)-35)){
-            backPositionX += speed * 2;
-            // If the map is past the left edge, move the map to the left edge, and move the player instead.
-            if(backPositionX > 0){
-                backPositionX = 0;
+    colliding = false;
+    if (speed > 0 && collisionLeft == true){
+        colliding = true;
+    } else if (speed < 0 && collisionRight == true){
+        colliding = true;
+    }
+    if (colliding == false){
+        //  If we're not past the left edge and not past the right edge check the player's position.
+        if(backPositionX <= 0 && backPositionX >= screenWidth - backWidth){
+            //  If the player's in the middle move the map.
+            if ((playerPositionX <= (screenWidth/2)-25)&&(playerPositionX >= (screenWidth/2)-35)){
+                backPositionX += speed * 2;
+                parallaxPositionX -= speed * .5;
+                // If the map is past the left edge, move the map to the left edge, and move the player instead.
+                if(backPositionX > 0){
+                    backPositionX = 0;
+                    movePlayer('horizontal',speed);
+                }
+                // If the map is past the right edge, move the map to the right edge, and move the player instead.
+                if(backPositionX < screenWidth - backWidth){
+                    backPositionX = screenWidth - backWidth;
+                    movePlayer('horizontal',speed);
+                }
+            //  Otherwise, move the player.
+            } else{
                 movePlayer('horizontal',speed);
             }
-            // If the map is past the right edge, move the map to the right edge, and move the player instead.
-            if(backPositionX < screenWidth - backWidth){
-                backPositionX = screenWidth - backWidth;
-                movePlayer('horizontal',speed);
-            }
-        //  Otherwise, move the player.
         } else{
             movePlayer('horizontal',speed);
         }
-    } else{
-        movePlayer('horizontal',speed);
+        updated = true;
     }
-    updated = true;
  }
 
  function movePlayer(direction,speed){
@@ -63,11 +72,11 @@ $(document).keydown(function(e) {
         }
     }   
     //  If the player's past the left edge, move it to the left edge.
-    if (playerPositionX < 1 && jumping == 0){
+    if (playerPositionX < 1){
         playerPositionX = 2;
     }
     //  If the player's past the right edge, move it to the left edge.
-    if (playerPositionX > screenWidth - 60 && jumping == 0){
+    if (playerPositionX > screenWidth - 60){
         playerPositionX = screenWidth - 61;
     }
  }
@@ -76,11 +85,13 @@ $(document).keydown(function(e) {
     //  Reset collision to default false.
     collision = false;
     collisionTop = false;
+    collisionLeft = false;
+    collisionRight = false;
 
     //  Iterate through platforms, setting their values to be used for collisionTesting
     for(i = 0; i < obstacleNumber; i++){
         // Move enemies
-        if (platforms[i].type == "enemy"){
+        if (platforms[i].movementSpeed != null){
             //  If not dying, walk.
             if (platforms[i].dying == false){
                 platforms[i].xVal += platforms[i].movementSpeed;
@@ -115,14 +126,16 @@ $(document).keydown(function(e) {
             if (playerPositionY - 20 < yVal){
                 specificCollisionTop = true;
                 collisionTop = true;
-            } else{
+            } else if(platforms[i].type == "platform"){
                 //If not, check sides.
-                if (platforms[i].type != 'goal'){
+                if (platforms[i].type != 'goal' && jumping == 0){
+                    // Check left hand collision
+                    if (overallPositionX < xVal2 && overallPositionX + 60 > xVal2){
+                        collisionLeft = true;
+                    }
                     // Check right hand collision
-                    if (playerPositionX < xVal2 && playerPositionX + 60 > xVal && jumping == 0){
-                        playerPositionX = xVal2 - 100;
-                    } else if (playerPositionX + 60 < xVal && jumping == 0){
-                        playerPositionX = xVal - 160;
+                    if (overallPositionX + 60 > xVal && overallPositionX < xVal){
+                        collisionRight = true;
                     }
                 }
             }
@@ -131,10 +144,19 @@ $(document).keydown(function(e) {
             if (platforms[i].type=="goal"){
                 win();
             //  If collided platform is an enemy, kill or be killed.
-            } else if (platforms[i].type=="enemy" && platforms[i].dying == false){
+            } else if (platforms[i].type == "lifePiece" && platforms[i].dying == false){
+                platforms[i].dying = true;
+                $('#platform' + i).remove();
+                lives ++;
+                input = document.createElement('div');
+                input.className = 'life';
+                document.getElementById('lives').appendChild(input);
+            } else if (platforms[i].type == "enemy" && platforms[i].dying == false){
                 if (specificCollisionTop == true){
-                    platforms[i].dying = true;
-                    jumping = 1;
+                    if (jumping == 0){
+                        platforms[i].dying = true;
+                        jumping = 1;
+                    }
                 } else{
                     lose();
                 }
@@ -167,6 +189,9 @@ $(document).keydown(function(e) {
  function gravity(){
     //  Gravitational acceleration
     gravityVal += gravityChange;
+    if (gravityVal > 9){
+        gravityVal = 9;
+    }
     //  Gravity acts on player.
     playerPositionY += gravityVal;
     updated = true;
@@ -202,8 +227,14 @@ function win(){
 }
 
 function lose(){
-    alert('Womp womp womp');
-    createLevel(level);
+    $('.life:last-of-type').remove();
+    lives--;
+    if (lives == 0){   
+        $('#player').remove();
+        changeInstruction('<h1>Game Over!</h1>');
+    } else{
+        createLevel(level);
+    }
 }
 
 //****************************************************************************************//
@@ -213,21 +244,28 @@ function lose(){
 
 function instructions(){
     // Level 1 instructions, based off of key input.
-    if (instructionNumber == 0 && level == 1){
-        $('#instructions').delay(500).fadeIn(500);
-        instructionNumber++;
-    }
+    if (level == 1){
+        if (instructionNumber == 0){
+            $('#instructions').delay(500).fadeIn(500);
+            instructionNumber++;
+        }
 
-    if (map[68] == true || map[65] == true){
-        if (level == 1 && instructionNumber == 1){
-            changeInstruction('<h1>Use <span class="key">W</span> to jump onto platforms.</h1>');
-        }    
+        if (map[68] == true || map[65] == true){
+            if (instructionNumber == 1){
+                changeInstruction('<h1>Use <span class="key">W</span> to jump onto platforms.</h1>');
+            }    
+        }
+        if (map[87] == true){
+            if (instructionNumber == 2){
+                changeInstruction('<h1>Move to the <img src="imgs/goal.png" id="goalText"/> to complete the level.</h1>');
+                $("#instructions").delay(3000).fadeOut(1000);
+            }    
+        }
     }
-    if (map[87] == true){
-        if (level == 1 && instructionNumber == 2){
-            changeInstruction('<h1>Move to the <img src="imgs/goal.png" id="goalText"/> to complete the level.</h1>');
-            $("#instructions").delay(3000).fadeOut(1000);
-        }    
+    if (level ==2){
+        $("#instructions").fadeIn(500);
+        instructionNumber++;
+        $("#instructions").delay(3000).fadeOut(1000);
     }
 }
 

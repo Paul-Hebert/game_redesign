@@ -1,3 +1,7 @@
+/*****************************************************************************************
+	Map dimensions and imagery
+*****************************************************************************************/
+
 #screen{
 	width:900px;
 	height:600px;
@@ -28,33 +32,9 @@
 	z-index: 0
 }
 
-#instructions{
-	z-index:6;
-	position: absolute;
-	top:50px;
-	left:50px;
-	width:500px;
-	display:none;
-}
-
-.key{
-	padding:5px;
-	padding-left:10px;
-	padding-right:10px;
-	background:#ccc;
-	border: 2px solid #000;
-	border-bottom: 4px solid #000;
-	border-top:1px solid #000;
-	border-radius: 5px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-o-border-radius:5px;
-}
-
-#goalText{
-	height:30px;
-	width:30px;
-}
+/*****************************************************************************************
+	Objects (Player, platforms, enemies, goals, etc.)
+*****************************************************************************************/
 
 #player{
 	position:absolute;
@@ -82,5 +62,59 @@
 	background: gold;
 	border:1px red dashed;
 	border-radius:50%;
+}
+
+/*****************************************************************************************
+	Player info (Instructions, lives)
+*****************************************************************************************/
+
+#instructions{
+	z-index:7;
+	position: absolute;
+	top:50px;
+	left:50px;
+	width:500px;
+	display:none;
+}
+
+.key{
+	padding:5px;
+	padding-left:10px;
+	padding-right:10px;
+	background:#ccc;
+	border: 2px solid #000;
+	border-bottom: 4px solid #000;
+	border-top:1px solid #000;
+	border-radius: 5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-o-border-radius:5px;
+}
+
+#goalText{
+	height:30px;
+	width:30px;
+}
+
+#lives{
+	z-index:7;
+	position: absolute;
+	top:50px;
+	left:700px;
+	width:200px;
+	height:100px;
+}
+
+.life{
+	margin-right:10px;
+	width:40px;
+	height:40px;
+	float:right;
+	background: #000;
+}
+
+.lifePiece{
+	position: absolute;
+	background:blue;
 }
 
