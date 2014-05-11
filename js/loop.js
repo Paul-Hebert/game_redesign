@@ -2,7 +2,9 @@
     function updateGame(){
         collisionTest();
         jump();
-        instructions();
+        if (instructionNumber <= instructionTotal){
+            instructions();
+        }
         if (userInput != true){
             if (map[68]){
                 horizontal(-playerSpeed);
@@ -24,6 +26,12 @@
         $( '#background' ).css('top',backPositionY + 'px');
     	$( '#player' ).css('left',playerPositionX + 'px');
     	$( '#player' ).css('top',playerPositionY - 60 + 'px');
+        for(i = 0; i < obstacleNumber; i++){
+            if (platforms[i].type == 'enemy'){
+                $('#platform' + i +'').css('left', platforms[i].xVal+ 'px');
+                $('#platform' + i +'').css('top', platforms[i].yVal+ 'px'); 
+            }
+        }
     }
 
 //  Game Loop
