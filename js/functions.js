@@ -34,7 +34,7 @@ $(document).keydown(function(e) {
         if(backPositionX <= 0 && backPositionX >= screenWidth - backWidth){
             //  If the player's in the middle move the map.
             if ((playerPositionX <= (screenWidth/2)-25)&&(playerPositionX >= (screenWidth/2)-35)){
-                backPositionX += speed * 2;
+                backPositionX += speed;
                 parallaxPositionX -= speed * .5;
                 // If the map is past the left edge, move the map to the left edge, and move the player instead.
                 if(backPositionX > 0){
@@ -90,24 +90,6 @@ $(document).keydown(function(e) {
 
     //  Iterate through platforms, setting their values to be used for collisionTesting
     for(i = 0; i < obstacleNumber; i++){
-        // Move enemies
-        if (platforms[i].movementSpeed != null){
-            //  If not dying, walk.
-            if (platforms[i].dying == false){
-                platforms[i].xVal += platforms[i].movementSpeed;
-                platforms[i].movementTotal += platforms[i].movementSpeed;
-                //  If enemy is at end of range turn around.
-                if (platforms[i].movementTotal >= platforms[i].movementRange || platforms[i].movementTotal <= -platforms[i].movementRange){
-                    platforms[i].movementTotal = 0;
-                    platforms[i].movementSpeed *= -1;
-                }
-            //If the enemy's dying and on the map, drop.
-            } else if(platforms[i].yVal < screenHeight){
-                platforms[i].yVal += 3;
-            }
-            updated = true;
-        }
-
         // Set values
         xVal = platforms[i].xVal;
         xVal2 = platforms[i].xVal + platforms[i].widthVal;
@@ -123,12 +105,12 @@ $(document).keydown(function(e) {
             collision = true;
 
             //Check to see if the collision is with the top border.
-            if (playerPositionY - 20 < yVal){
+            if (playerPositionY - 20 < yVal && platforms[i].type != 'lifePiece'){
                 specificCollisionTop = true;
                 collisionTop = true;
             } else if(platforms[i].type == "platform"){
                 //If not, check sides.
-                if (platforms[i].type != 'goal' && jumping == 0){
+                if (platforms[i].type != 'goal'){
                     // Check left hand collision
                     if (overallPositionX < xVal2 && overallPositionX + 60 > xVal2){
                         collisionLeft = true;
@@ -146,11 +128,20 @@ $(document).keydown(function(e) {
             //  If collided platform is an enemy, kill or be killed.
             } else if (platforms[i].type == "lifePiece" && platforms[i].dying == false){
                 platforms[i].dying = true;
-                $('#platform' + i).remove();
-                lives ++;
-                input = document.createElement('div');
-                input.className = 'life';
-                document.getElementById('lives').appendChild(input);
+                $('#platform' + i + '').fadeOut();
+                lifePieces++;
+                    input = document.createElement('div');
+                    input.className = 'lifePieceSymbol';
+                    document.getElementById('lifePieces').appendChild(input);
+
+                if (lifePieces == 3){
+                    $('.lifePieceSymbol').remove();
+                    lifePieces = 0;
+                    lives ++;
+                    input = document.createElement('div');
+                    input.className = 'life';
+                    document.getElementById('lives').appendChild(input);
+                }
             } else if (platforms[i].type == "enemy" && platforms[i].dying == false){
                 if (specificCollisionTop == true){
                     if (jumping == 0){
@@ -163,6 +154,27 @@ $(document).keydown(function(e) {
             }
         }
 
+        // Move enemies
+        if (platforms[i].movementSpeed != null){
+            //  If not dying, walk.
+            if (platforms[i].dying == false){
+                platforms[i].xVal += platforms[i].movementSpeed;
+                platforms[i].movementTotal += platforms[i].movementSpeed;
+         /* Moves player if collision is true in genral.d
+                if (platforms[i].type == 'platform' && specificCollisionTop == true){
+                    playerPositionX  += platforms[i].movementSpeed;
+                }*/
+                //  If enemy is at end of range turn around.
+                if (platforms[i].movementTotal >= platforms[i].movementRange || platforms[i].movementTotal <= -platforms[i].movementRange){
+                    platforms[i].movementTotal = 0;
+                    platforms[i].movementSpeed *= -1;
+                }
+            //If the enemy's dying and on the map, drop.
+            } else if(platforms[i].yVal < screenHeight){
+                platforms[i].yVal += 3;
+            }
+            updated = true;
+        }
     }
 
     if (playerPositionY > screenHeight){
@@ -263,9 +275,12 @@ function instructions(){
         }
     }
     if (level ==2){
-        $("#instructions").fadeIn(500);
-        instructionNumber++;
-        $("#instructions").delay(3000).fadeOut(1000);
+        if (instructionNumber == 0){
+            $("#instructions").delay(3000).fadeOut(1000);
+            instructionNumber++;
+            changeInstruction('<h1>Collect 3 blue life pieces to gain a life.</h1>');
+            $("#instructions").delay(3000).fadeOut(1000);
+        }
     }
 }
 
