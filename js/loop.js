@@ -18,34 +18,38 @@
                 }
             }
         }
+        return false;
     }
 
 //  draw
     function drawGame(){
 
-        document.getElementById('background').style.webkitTransform= "translate(" + backPositionX + "px)";
-        document.getElementById('parallax').style.webkitTransform= "translate(" + parallaxPositionX + "px)";
+        background.style.webkitTransform= "translate(" + backPositionX + "px)";
+        parallax.style.webkitTransform= "translate(" + parallaxPositionX + "px)";
         document.getElementById('player').style.webkitTransform= "translateX(" + (playerPositionX - backPositionX)+ "px)";
     	
 
-    	$( '#player' ).css('top',playerPositionY - 60 + 'px');
+    	$('#player').css('top',playerPositionY - 60 + 'px');
         for(i = 0; i < obstacleNumber; i++){
             if (platforms[i].movementSpeed != null){
                 $('#platform' + i +'').css('left', platforms[i].xVal+ 'px');
                 $('#platform' + i +'').css('top', platforms[i].yVal+ 'px'); 
             }
         }
+        return false;
     }
 
 //  Game Loop
 function mainLoop() {
-    requestAnimationFrame(mainLoop);
+    setInterval( function(){
         updateGame();
         if (updated){
         	drawGame();
     	}
     	updated = false;
-    };
+        return false;
+    },1000/30);
+}
 
 $(function(){
     mainLoop();
@@ -82,6 +86,7 @@ $(function(){
             window.cancelAnimationFrame = function(id) {
                 clearTimeout(id);
             };
+        return false;
     }());
 //****************************************************************************************//
 //****************************************************************************************//

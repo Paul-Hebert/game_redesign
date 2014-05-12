@@ -15,6 +15,7 @@ $(document).keydown(function(e) {
     if (e.keyCode in map) {
         map[e.keyCode] = false;
     }
+    return false;
 });
 
 //****************************************************************************************//
@@ -55,6 +56,7 @@ $(document).keydown(function(e) {
         }
         updated = true;
     }
+    return false;
  }
 
  function movePlayer(direction,speed){
@@ -79,6 +81,7 @@ $(document).keydown(function(e) {
     if (playerPositionX > screenWidth - 60){
         playerPositionX = screenWidth - 61;
     }
+    return false;
  }
 
  function collisionTest(identifier){
@@ -190,7 +193,7 @@ $(document).keydown(function(e) {
         gravityVal = 1;
     }
 
-
+    return false;
  }
 
 //****************************************************************************************//
@@ -207,6 +210,7 @@ $(document).keydown(function(e) {
     //  Gravity acts on player.
     playerPositionY += gravityVal;
     updated = true;
+    return false;
  }
 
  function jump(){
@@ -227,6 +231,7 @@ $(document).keydown(function(e) {
             $('.front').css('z-index',5);
         }
     }
+    return false;
  }
 
 //****************************************************************************************//
@@ -236,6 +241,7 @@ $(document).keydown(function(e) {
 function win(){
     level++;
     createLevel(level);
+    return false;
 }
 
 function lose(){
@@ -247,6 +253,7 @@ function lose(){
     } else{
         createLevel(level);
     }
+    return false;
 }
 
 //****************************************************************************************//
@@ -282,6 +289,7 @@ function instructions(){
             $("#instructions").delay(3000).fadeOut(1000);
         }
     }
+    return false;
 }
 
 function changeInstruction(message){
@@ -291,4 +299,6 @@ function changeInstruction(message){
                 $("#instructions").html(message);
             }, 1000);
             instructionNumber ++;
+    return false;
+
 }

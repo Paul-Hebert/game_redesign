@@ -19,18 +19,22 @@ $(function(){
 	lives = 3;
 	lifePieces = 0;
 
-	playerSpeed = 3;
+	playerSpeed = 6;
 
 	jumping = 0;
-	jumpVal = 4.5;
-	jumpLength = 60;
+	jumpVal = 9;
+	jumpLength = 30;
 
 	collision = false;
 	collisionTop = false;
 	gravityVal = 1;
 	gravityChange = .7;
-});
 
+
+    background = document.getElementById('background');
+    parallax = document.getElementById('parallax');
+
+});
 //****************************************************************************************//
 //	Create Platforms	//
 //****************************************************************************************//
@@ -118,6 +122,7 @@ function createLevel(number) {
 	$('.back').attr('src','imgs/map' + number + '_back.png');
 	$('.front').attr('src','imgs/map' + number + '_front.png');
 	$('.constant_front').attr('src','imgs/map' + number + '_constant_front.png');
+
 
 	if (number == 1){
 		createObject(i,0,563,592,60,'platform');
