@@ -22,9 +22,12 @@
 
 //  draw
     function drawGame(){
+
         document.getElementById('background').style.webkitTransform= "translate(" + backPositionX + "px)";
-        $( '.parallax' ).css('left',parallaxPositionX + 'px');
-    	$( '#player' ).css('left',playerPositionX + 'px');
+        document.getElementById('parallax').style.webkitTransform= "translate(" + parallaxPositionX + "px)";
+        document.getElementById('player').style.webkitTransform= "translateX(" + (playerPositionX - backPositionX)+ "px)";
+    	
+
     	$( '#player' ).css('top',playerPositionY - 60 + 'px');
         for(i = 0; i < obstacleNumber; i++){
             if (platforms[i].movementSpeed != null){
