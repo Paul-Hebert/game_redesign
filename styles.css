@@ -8,6 +8,7 @@
 	overflow:hidden;
 	border:3px solid #000;
 	position:absolute;
+	top:100px;
 }
 
 #background, #background img{
@@ -21,7 +22,7 @@
 }
 
 .front{
-	z-index: 5;
+	z-index: 4;
 }
 
 .constant_front{
@@ -40,20 +41,45 @@
 	Objects (Player, platforms, enemies, goals, etc.)
 *****************************************************************************************/
 
+
+/*Player*/ 
+
 #player{
 	position:absolute;
 	width:60px;
 	height:60px;
-	background:#000;
 	z-index:1;
 	display:none;
 	box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
-.enemy{
+.walk{
+	-webkit-animation: walk steps(16) 2s infinite; 
+}
+
+.spriteRight{
+	background:url('imgs/sprites1.png');
+}
+
+.spriteLeft{
+	background:url('imgs/sprites2.png');
+}
+
+@-webkit-keyframes walk {
+    from { background-position:0px -0px; }
+    to { background-position:-1008px -0px; }
+}
+
+/* Other */
+
+.enemy, .enemy1{
 	background: red;
 	position:absolute;
 	box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.enemy1{
+	background:purple;
 }
 
 .platform{
@@ -86,6 +112,10 @@
 	left:50px;
 	width:500px;
 	display:none;
+}
+
+h1{
+	margin:0px;
 }
 
 .key{

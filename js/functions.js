@@ -24,6 +24,19 @@ $(document).keydown(function(e) {
 
 
  function horizontal(speed){
+    if (jumping == 0 && collisionTop == true){
+        $('#player').addClass( "walk" );
+    }
+    if (speed < 0){
+        $('#player').addClass( "spriteRight" );
+        $('#player').removeClass( "spriteLeft" );     
+
+    } else{
+        $('#player').addClass( "spriteLeft" );   
+        $('#player').removeClass( "spriteRight" );     
+    }
+
+
     colliding = false;
     if (speed > 0 && collisionLeft == true){
         colliding = true;
@@ -56,6 +69,8 @@ $(document).keydown(function(e) {
         }
         updated = true;
     }
+   // runSprites(speed);
+
     return false;
  }
 
@@ -76,15 +91,17 @@ $(document).keydown(function(e) {
     //  If the player's past the left edge, move it to the left edge.
     if (playerPositionX < 1){
         playerPositionX = 2;
+        return false;    
     }
-    //  If the player's past the right edge, move it to the left edge.
-    if (playerPositionX > screenWidth - 60){
-        playerPositionX = screenWidth - 61;
+    //  If the player's past the right edge, move it to the right edge.
+    if (playerPositionX > screenWidth - playerWidth){
+        playerPositionX = screenWidth - (playerWidth + 1);
+        return false;
     }
     return false;
  }
 
- function collisionTest(identifier){
+ function collisionTest(identifier,mainWidth,mainHeight){
     //  Reset collision to default false.
     collision = false;
     collisionTop = false;
@@ -103,7 +120,7 @@ $(document).keydown(function(e) {
         overallPositionX = playerPositionX - backPositionX;
 
         //  Test for collisions. If true, set collision to true.
-        if (playerPositionY >= yVal-2 && playerPositionY <= yVal2 + 60 && overallPositionX >= xVal - 60 && overallPositionX <= xVal2){
+        if (playerPositionY >= yVal-2 && playerPositionY <= yVal2 + mainHeight && overallPositionX >= xVal - mainWidth && overallPositionX <= xVal2){
             specificCollisionTop = false;
             collision = true;
 
@@ -115,43 +132,49 @@ $(document).keydown(function(e) {
                 //If not, check sides.
                 if (platforms[i].type != 'goal'){
                     // Check left hand collision
-                    if (overallPositionX < xVal2 && overallPositionX + 60 > xVal2){
+                    if (overallPositionX < xVal2 && overallPositionX + mainWidth > xVal2){
                         collisionLeft = true;
                     }
                     // Check right hand collision
-                    if (overallPositionX + 60 > xVal && overallPositionX < xVal){
+                    if (overallPositionX + mainWidth > xVal && overallPositionX < xVal){
                         collisionRight = true;
                     }
                 }
             }
 
             //  If collided platform is the goal, win the game.
-            if (platforms[i].type=="goal"){
-                win();
-            //  If collided platform is an enemy, kill or be killed.
-            } else if (platforms[i].type == "lifePiece" && platforms[i].dying == false){
-                platforms[i].dying = true;
-                $('#platform' + i + '').fadeOut();
-                lifePieces++;
-                    input = document.createElement('div');
-                    input.className = 'lifePieceSymbol';
-                    document.getElementById('lifePieces').appendChild(input);
+            if (platforms[i].dying == false){
+                if (platforms[i].type=="goal"){
+                    win();
+                //  Life pieces
+                } else if (platforms[i].type == "lifePiece"){
+                    platforms[i].dying = true;
+                    $('#platform' + i + '').fadeOut();
+                    lifePieces++;
+                        input = document.createElement('div');
+                        input.className = 'lifePieceSymbol';
+                        document.getElementById('lifePieces').appendChild(input);
 
-                if (lifePieces == 3){
-                    $('.lifePieceSymbol').remove();
-                    lifePieces = 0;
-                    lives ++;
-                    input = document.createElement('div');
-                    input.className = 'life';
-                    document.getElementById('lives').appendChild(input);
-                }
-            } else if (platforms[i].type == "enemy" && platforms[i].dying == false){
-                if (specificCollisionTop == true){
-                    if (jumping == 0){
-                        platforms[i].dying = true;
-                        jumping = 1;
+                    if (lifePieces == 3){
+                        $('.lifePieceSymbol').remove();
+                        lifePieces = 0;
+                        lives ++;
+                        input = document.createElement('div');
+                        input.className = 'life';
+                        document.getElementById('lives').appendChild(input);
                     }
-                } else{
+                //  If collided platform is an enemy, kill or be killed.
+
+                } else if (platforms[i].type == "enemy"){
+                    if (specificCollisionTop == true){
+                        if (jumping == 0){
+                            platforms[i].dying = true;
+                            jumping = 1;
+                        }
+                    } else{
+                        lose();
+                    }
+                } else if (platforms[i].type =="enemy1"){
                     lose();
                 }
             }
@@ -161,7 +184,12 @@ $(document).keydown(function(e) {
         if (platforms[i].movementSpeed != null){
             //  If not dying, walk.
             if (platforms[i].dying == false){
+                if (platforms[i].direction == 'horizontal'){
                 platforms[i].xVal += platforms[i].movementSpeed;
+                } else{
+                platforms[i].yVal += platforms[i].movementSpeed;
+                   
+                }
                 platforms[i].movementTotal += platforms[i].movementSpeed;
          /* Moves player if collision is true in genral.d
                 if (platforms[i].type == 'platform' && specificCollisionTop == true){
@@ -217,7 +245,7 @@ $(document).keydown(function(e) {
     //  If there's a jump in progress, the player goes up.
     if (jumping != 0){
     // Put player in front of front layer.
-    $('.front').css('z-index',0);
+    $('#player').css('z-index',5);
     movePlayer('vertical',jumpVal); 
     jumping++; 
         //  Reset jump variable when the jump is finished.
@@ -228,7 +256,7 @@ $(document).keydown(function(e) {
     } else{
         //  Put player behind front layer if landed.
         if (collisionTop == true){
-            $('.front').css('z-index',5);
+            $('#player').css('z-index',1);
         }
     }
     return false;
@@ -301,4 +329,24 @@ function changeInstruction(message){
             instructionNumber ++;
     return false;
 
+}
+
+function runSprites(speed){
+    if (jumping == 0 && collisionTop == true){
+        if (spriteLoop <= spriteCount){
+            if (speed < 0){
+                spriteNum = 1;
+            } else{
+                spriteNum = 2;
+            }
+            spriteCount = 0;
+            sprites -= 63;
+            if (sprites < -1000){
+                sprites = 0;
+            }
+            player.style.background="url('imgs/sprites" + spriteNum + ".png') " + sprites + "px 0px";
+        }
+    }
+    spriteCount++;
+    return false;
 }

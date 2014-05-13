@@ -19,11 +19,18 @@ $(function(){
 	lives = 3;
 	lifePieces = 0;
 
-	playerSpeed = 6;
+	playerSpeed = 7;
+	playerWidth = 60;
+	playerHeight=60;
+
+	spriteLoop = 3;
+	spriteCount = 0;
+	sprites=0;
+	spriteNum = 1;
 
 	jumping = 0;
-	jumpVal = 9;
-	jumpLength = 30;
+	jumpVal = 9.5;
+	jumpLength = 35;
 
 	collision = false;
 	collisionTop = false;
@@ -33,7 +40,7 @@ $(function(){
 
     background = document.getElementById('background');
     parallax = document.getElementById('parallax');
-
+    player = document.getElementById('player');
 });
 //****************************************************************************************//
 //	Create Platforms	//
@@ -58,7 +65,7 @@ function defineProperty(obj, name, value){
 	Object.defineProperty(obj, name, config);
 }
 
-function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movementRange){
+function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movementRange,direction){
   platforms[i] = Object.create(null);
     defineProperty(platforms[i], 'xVal',xVal);
     defineProperty(platforms[i], 'yVal',yVal);
@@ -70,13 +77,14 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movement
     if (movementSpeed != null){
 	    defineProperty(platforms[i], 'movementSpeed', movementSpeed);    	
 	    defineProperty(platforms[i], 'movementRange', movementRange);    
-	    defineProperty(platforms[i], 'movementTotal', 0);    	     
+	    defineProperty(platforms[i], 'movementTotal', 0);  
+	    defineProperty(platforms[i], 'direction', direction);   	     
     }
 
     obstacleNumber++;
 
-    /*Outlines objects for level creation and testing.
-    if (platforms[i].type != 'enemy' && platforms[i].type != 'goal' && platforms[i].type != 'lifePiece'){
+    /*Outlines objects for level creation and testing.*/
+    if (platforms[i].type != 'enemy' && platforms[i].type != 'enemy1' && platforms[i].type != 'goal' && platforms[i].type != 'lifePiece'){
    		input = document.createElement('div');
   		input.style.top = platforms[i].yVal + 'px';
   		input.style.left = platforms[i].xVal + 'px';
@@ -85,9 +93,9 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movement
     	input.setAttribute('id','platform' + i)
     	input.className = platforms[i].type;
     	document.getElementById('background').appendChild(input);
-    }*/
+    }
 
-    if (platforms[i].type == 'enemy' || platforms[i].type == 'goal' || platforms[i].type == 'lifePiece'){
+    if (platforms[i].type == 'enemy' || platforms[i].type == 'enemy1' || platforms[i].type == 'goal' || platforms[i].type == 'lifePiece'){
     	input = document.createElement('div');
   		input.style.top = platforms[i].yVal + 'px';
   		input.style.left = platforms[i].xVal + 'px';
@@ -104,7 +112,7 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movement
 function createLevel(number) {
 	platforms.length = 0
 						$('.platform, .goal, .ground').remove(); /*	For level creation	*/
-	$('.enemy, .lifePiece').remove();
+	$('.enemy, .enemy1, .lifePiece').remove();
 	obstacleNumber = 0;
 	i = 0;
 
@@ -118,7 +126,7 @@ function createLevel(number) {
 
 	level=number;
 
-	$('.parallax').attr('src','imgs/map' + number + '_parallax.jpg');
+	$('#parallax').attr('src','imgs/map' + number + '_parallax.jpg');
 	$('.back').attr('src','imgs/map' + number + '_back.png');
 	$('.front').attr('src','imgs/map' + number + '_front.png');
 	$('.constant_front').attr('src','imgs/map' + number + '_constant_front.png');
@@ -146,6 +154,67 @@ function createLevel(number) {
 						$('.platform, .goal, .ground').remove(); /*	For level creation	*/
 	}
 
+	if (number == 2){
+		createObject(i,0,263,200,350,'platform');
+	    i++;
+		createObject(i,200,554,720,90,'platform');
+	    i++;
+		createObject(i,520,440,140,200,'platform');
+	    i++;
+		createObject(i,660,490,70,100,'platform');
+	    i++;
+		createObject(i,220,494,60,60,'enemy',6,260,'horizontal');
+		i++;
+		createObject(i,873,438,212,28,'platform');
+	    i++;
+		createObject(i,964,20,30,30,'lifePiece');
+	    i++;
+		createObject(i,884,378,60,60,'enemy',4,142,'horizontal');
+	    i++;
+		createObject(i,1475,248,250,362,'platform');
+	    i++;
+		createObject(i,1650,150,125,510,'platform');
+	    i++;
+		createObject(i,1650,150,300,20,'platform');
+	    i++;
+		createObject(i,1650,246,600,30,'platform');
+	    i++;
+		createObject(i,1650,268,400,400,'platform');
+	    i++;
+		createObject(i,2200,563,1000,400,'platform');
+	    i++;
+		createObject(i,1400,202,75,402,'platform');
+	    i++;
+		createObject(i,1300,524,250,362,'platform');
+	    i++;
+		createObject(i,2350,88,399,72,'platform');
+	    i++;
+
+		createObject(i,1300,470,60,60,'enemy',2,30,'horizontal');
+		i++;
+		createObject(i,1475,188,60,60,'enemy',6,125,'horizontal');
+		i++;
+		createObject(i,1820,188,60,60,'enemy',8,350,'horizontal');
+		i++;
+		createObject(i,1800,198,30,30,'lifePiece');
+	    i++;
+		createObject(i,2230,523,30,30,'lifePiece');
+	    i++;
+		createObject(i,2200,350,150,70,'platform');
+	    i++;
+		createObject(i,2400,28,60,60,'goal');
+
+		instructionTotal = 2;
+
+		playerPositionX = 100;
+		playerPositionY = 200;
+
+		backWidth = 2593;
+
+		$('#instructions').html("<h1>Watch Out! <img src='imgs/enemy.png'/>'s can kill you. Jump on their heads to kill them.</h1>");
+						$('.platform, .ground').remove(); /*	For level creation	*/
+	}
+
 	if (number == 3){
 		createObject(i,0,563,592,60,'platform');
 		i++;
@@ -155,13 +224,13 @@ function createLevel(number) {
 		i++;
 		createObject(i,-200,533,532,60,'platform');		
 		i++;
-		createObject(i,-200,173,532,60,'platform',3,400);		
+		createObject(i,-200,173,532,60,'platform',3,400,'horizontal');		
 		i++;
-		createObject(i,335,503,60,60,'enemy',2,100);	
+		createObject(i,335,503,90,90,'enemy1',2,100,'horizontal');	
 		i++;
-		createObject(i,750,443,60,60,'enemy',5,200);	
+		createObject(i,750,443,60,60,'enemy',5,200,'horizontal');	
 		i++;
-		createObject(i,500,443,60,60,'enemy',2,50);	
+		createObject(i,500,443,60,60,'enemy',2,50,'horizontal');	
 		i++;
 		createObject(i,700,173,532,60,'platform');		
 		i++;
@@ -173,67 +242,6 @@ function createLevel(number) {
 		playerPositionY = 460;	
 
 		backWidth = 3000;
-
-	}
-
-	if (number == 2){
-		createObject(i,0,263,200,350,'platform');
-	    i++;
-		createObject(i,200,544,720,90,'platform');
-	    i++;
-		createObject(i,520,440,140,200,'platform');
-	    i++;
-		createObject(i,660,490,70,100,'platform');
-	    i++;
-		createObject(i,220,484,60,60,'enemy',3,260);
-		i++;
-		createObject(i,873,438,212,28,'platform');
-	    i++;
-		createObject(i,964,80,30,30,'lifePiece');
-	    i++;
-		createObject(i,884,378,60,60,'enemy',2,142);
-	    i++;
-		createObject(i,1400,238,250,362,'platform');
-	    i++;
-		createObject(i,1650,140,125,510,'platform');
-	    i++;
-		createObject(i,1650,140,300,30,'platform');
-	    i++;
-		createObject(i,1650,238,600,30,'platform');
-	    i++;
-		createObject(i,1650,268,400,400,'platform');
-	    i++;
-		createObject(i,2200,563,1000,400,'platform');
-	    i++;
-		createObject(i,1400,198,75,402,'platform');
-	    i++;
-		createObject(i,1300,520,250,362,'platform');
-	    i++;
-		createObject(i,2350,88,399,72,'platform');
-	    i++;
-
-		createObject(i,1300,460,60,60,'enemy',1,30);
-		i++;
-		createObject(i,1475,178,60,60,'enemy',3,125);
-		i++;
-		createObject(i,1820,178,60,60,'enemy',4,350);
-		i++;
-		createObject(i,1800,198,30,30,'lifePiece');
-	    i++;
-		createObject(i,2230,523,30,30,'lifePiece');
-	    i++;
-		createObject(i,2200,350,150,70,'platform');
-	    i++;
-		createObject(i,2550,28,60,60,'goal');
-
-		instructionTotal = 2;
-
-		playerPositionX = 100;
-		playerPositionY = 200;
-
-		backWidth = 2600;
-
-		$('#instructions').html("<h1>Watch Out! <img src='imgs/enemy.png'/>'s can kill you. Jump on their heads to kill them.</h1>");
 	}
 }
 
