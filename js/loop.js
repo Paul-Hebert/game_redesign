@@ -25,7 +25,7 @@
 //  draw
     function drawGame(){
 
-        background.style.webkitTransform= "translate(" + backPositionX + "px)";
+        background.style.webkitTransform= "translate(" + backPositionX + "px," + backPositionY + "px)";
         player.style.webkitTransform= "translate(" + (playerPositionX - backPositionX)+ "px," + (playerPositionY - playerHeight) + "px)";
         
         for(i = 0; i < obstacleNumber; i++){
@@ -49,7 +49,52 @@ function mainLoop() {
     },1000/20);
 }
 
-$(function(){
-    mainLoop();
+beginning = 0;
+
+function startGame(){
+    createLevel(1);
+    startLevel();
+
+    rocketX = -100;
+    rocketY =100;
+    $('#rocket').fadeIn();
+
+    earthquake = 1;
+
+    beginningLoop = setInterval(function(){
+        if (beginning <= 60){
+            $('#rocket').css('top',rocketY);
+            $('#rocket').css('left',rocketX);
+            rocketY +=6;
+            rocketX += 2;
+        }
+
+
+        if (beginning == 60){
+            $('#player').fadeIn();
+        }
+
+        if (beginning <= 83 && beginning >= 60){
+            earthquakeTime();
+        }
+
+        if (beginning > 90){
+            playerPositionX += playerSpeed;
+            $('#player').addClass( "walk" );
+        }
+        
+        drawGame();
+        beginning++;
+
+        if (beginning == 110){
+            clearInterval(beginningLoop);
+            mainLoop();
+        }
+    },1000/20);
+}
+
+$(function (){
+    startGame();
 });
+
 

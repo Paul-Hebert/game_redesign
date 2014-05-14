@@ -23,24 +23,21 @@ $(function(){
 	playerWidth = 60;
 	playerHeight=60;
 
-	spriteLoop = 3;
-	spriteCount = 0;
-	sprites=0;
-	spriteNum = 1;
-
 	jumping = 0;
-	jumpVal = 9.5;
+	jumpVal = 8;
 	jumpLength = 35;
 
 	collision = false;
 	collisionTop = false;
 	gravityVal = 1;
-	gravityChange = .7;
+	gravityChange = 1;
 
 
     background = document.getElementById('background');
     parallax = document.getElementById('parallax');
     player = document.getElementById('player');
+
+    backPositionY = 0;
 });
 //****************************************************************************************//
 //	Create Platforms	//
@@ -112,7 +109,7 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movement
 function createLevel(number) {
 	platforms.length = 0
 						$('.platform, .goal, .ground').remove(); /*	For level creation	*/
-	$('.enemy, .enemy1, .lifePiece').remove();
+	$('.enemy, .enemy1, .lifePiece, .spike').remove();
 	obstacleNumber = 0;
 	i = 0;
 
@@ -135,17 +132,21 @@ function createLevel(number) {
 	if (number == 1){
 		createObject(i,0,563,592,60,'platform');
 	    i++;
-		createObject(i,337,344,220,90,'platform');
+		createObject(i,337,344,220,90,'platform1');
 	    i++;
 		createObject(i,805,560,190,60,'platform');
 	    i++;
-		createObject(i,773,238,212,128,'platform');
+		createObject(i,773,238,212,128,'platform1');
 	    i++;
 		createObject(i,853,160,60,60,'goal');
 
 		instructionTotal = 3;
 
-		playerPositionX = 300;
+		playerPositionX = 50;
+		if (lives < 3){
+			playerPositionX = 150;
+		}
+
 		playerPositionY = 560;
 
 		backWidth = 1000;
@@ -155,13 +156,15 @@ function createLevel(number) {
 	}
 
 	if (number == 2){
+		$('#rocket').remove();
+
 		createObject(i,0,263,200,350,'platform');
 	    i++;
 		createObject(i,200,554,720,90,'platform');
 	    i++;
-		createObject(i,520,440,140,200,'platform');
+		createObject(i,520,440,140,200,'platform1');
 	    i++;
-		createObject(i,660,490,70,100,'platform');
+		createObject(i,660,490,70,100,'platform1');
 	    i++;
 		createObject(i,220,494,60,60,'enemy',6,260,'horizontal');
 		i++;
@@ -187,9 +190,8 @@ function createLevel(number) {
 	    i++;
 		createObject(i,1300,524,250,362,'platform');
 	    i++;
-		createObject(i,2350,88,399,72,'platform');
+		createObject(i,2350,88,399,72,'platform1');
 	    i++;
-
 		createObject(i,1300,470,60,60,'enemy',2,30,'horizontal');
 		i++;
 		createObject(i,1475,188,60,60,'enemy',6,125,'horizontal');
@@ -200,7 +202,7 @@ function createLevel(number) {
 	    i++;
 		createObject(i,2230,523,30,30,'lifePiece');
 	    i++;
-		createObject(i,2200,350,150,70,'platform');
+		createObject(i,2200,350,150,70,'platform1');
 	    i++;
 		createObject(i,2400,28,60,60,'goal');
 
@@ -216,6 +218,31 @@ function createLevel(number) {
 	}
 
 	if (number == 3){
+		instructionTotal = 0;
+
+		playerPositionX = 20;
+		playerPositionY = 300;	
+
+		backWidth = 3000;
+
+		createObject(i,0,333,200,100,'platform');
+		i++;
+		createObject(i,0,433,70,70,'platform');
+		i++;
+		createObject(i,85,448,40,40,'lifePiece');
+		i++;
+		createObject(i,700,303,102,600,'platform');
+		i++;
+		createObject(i,000,503,700,600,'platform');
+		i++;
+		createObject(i,600,433,70,70,'enemy1',-8,200,'horizontal');
+		i++;
+		createObject(i,200,433,70,70,'enemy1',4,200,'horizontal');
+		i++;
+		createObject(i,200,543,500,60,'spike',0,100);
+	}
+
+	if (number == 4){
 		createObject(i,0,563,592,60,'platform');
 		i++;
 		createObject(i,500,503,532,60,'platform');	
@@ -246,10 +273,9 @@ function createLevel(number) {
 }
 
 function startLevel(){
-	$('.currentBG, #player').fadeIn();
+	$('.currentBG').fadeIn();
+	if (level != 1){
+		$('#player').fadeIn();
+	}
 }
 
-$(function(){
-	createLevel(1);
-	startLevel();
-});

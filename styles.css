@@ -8,10 +8,10 @@
 	overflow:hidden;
 	border:3px solid #000;
 	position:absolute;
-	top:100px;
+
 }
 
-#background, #background img{
+#background, #background img:not(#rocket){
 	height:100%;
 	width:auto;
 	position:absolute;
@@ -26,7 +26,7 @@
 }
 
 .constant_front{
-	z-index: 6;
+	z-index: 7;
 }
 
 .back{
@@ -72,7 +72,7 @@
 
 /* Other */
 
-.enemy, .enemy1{
+.enemy, .enemy1, .spike{
 	background: red;
 	position:absolute;
 	box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
@@ -80,6 +80,12 @@
 
 .enemy1{
 	background:purple;
+}
+
+.spike{
+	background:url('imgs/spike.png');
+	width:60px;
+	height:60px;
 }
 
 .platform{
@@ -99,6 +105,17 @@
 	background: gold;
 	border:1px red dashed;
 	border-radius:50%;
+}
+
+#rocket{
+	position:absolute;
+	z-index:6;
+	width:127px;
+	height:158px;
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+	display:none;
+	left:-100px;
+	top:100px;
 }
 
 /*****************************************************************************************

@@ -101,7 +101,7 @@ $(document).keydown(function(e) {
     return false;
  }
 
- function collisionTest(identifier,mainWidth,mainHeight){
+ function collisionTest(identifier,mainWidth,mainHeight,mainX,mainY){
     //  Reset collision to default false.
     collision = false;
     collisionTop = false;
@@ -176,6 +176,8 @@ $(document).keydown(function(e) {
                     }
                 } else if (platforms[i].type =="enemy1"){
                     lose();
+                } else if (platforms[i].type =="spike" && specificCollisionTop == true){
+                    lose();
                 }
             }
         }
@@ -185,10 +187,9 @@ $(document).keydown(function(e) {
             //  If not dying, walk.
             if (platforms[i].dying == false){
                 if (platforms[i].direction == 'horizontal'){
-                platforms[i].xVal += platforms[i].movementSpeed;
+                    platforms[i].xVal += platforms[i].movementSpeed;
                 } else{
-                platforms[i].yVal += platforms[i].movementSpeed;
-                   
+                    platforms[i].yVal += platforms[i].movementSpeed;  
                 }
                 platforms[i].movementTotal += platforms[i].movementSpeed;
          /* Moves player if collision is true in genral.d
@@ -321,32 +322,37 @@ function instructions(){
 }
 
 function changeInstruction(message){
-            // Fade instructions in and out. Change text in between.
-            $('#instructions').delay(500).fadeOut(500).delay(500).fadeIn(500);
-            window.setTimeout(function () {
-                $("#instructions").html(message);
-            }, 1000);
-            instructionNumber ++;
+        // Fade instructions in and out. Change text in between.
+        $('#instructions').delay(500).fadeOut(500).delay(500).fadeIn(500);
+        window.setTimeout(function () {
+            $("#instructions").html(message);
+        }, 1000);
+        instructionNumber ++;
     return false;
-
 }
 
-function runSprites(speed){
-    if (jumping == 0 && collisionTop == true){
-        if (spriteLoop <= spriteCount){
-            if (speed < 0){
-                spriteNum = 1;
-            } else{
-                spriteNum = 2;
+//****************************************************************************************//
+//  Cut Scenes and Bullhonkey  //
+//****************************************************************************************//
+function earthquakeTime(){
+            if (earthquake == 5){
+                earthquake = 1;
             }
-            spriteCount = 0;
-            sprites -= 63;
-            if (sprites < -1000){
-                sprites = 0;
+            if (earthquake == 1){
+                backPositionX++;
+                backPositionY++;
             }
-            player.style.background="url('imgs/sprites" + spriteNum + ".png') " + sprites + "px 0px";
+            if (earthquake == 2){
+                backPositionX++;
+                backPositionY--;
+            }
+            if (earthquake == 3){
+                backPositionX--;
+                backPositionY--;
+            }
+            if (earthquake == 4){
+                backPositionX--;
+                backPositionY++;
+            }
+            earthquake++
         }
-    }
-    spriteCount++;
-    return false;
-}
