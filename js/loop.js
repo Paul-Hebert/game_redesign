@@ -49,8 +49,6 @@ function mainLoop() {
     },1000/20);
 }
 
-beginning = 0;
-
 function startGame(){
     createLevel(1);
     startLevel();
@@ -62,23 +60,23 @@ function startGame(){
     earthquake = 1;
 
     beginningLoop = setInterval(function(){
-        if (beginning <= 60){
+        if (beginning <= 20){
             $('#rocket').css('top',rocketY);
             $('#rocket').css('left',rocketX);
-            rocketY +=6;
-            rocketX += 2;
+            rocketY +=18;
+            rocketX += 6;
         }
 
 
-        if (beginning == 60){
+        if (beginning == 40){
             $('#player').fadeIn();
         }
 
-        if (beginning <= 83 && beginning >= 60){
+        if (beginning <= 43 && beginning >= 20){
             earthquakeTime();
         }
 
-        if (beginning > 90){
+        if (beginning > 50){
             playerPositionX += playerSpeed;
             $('#player').addClass( "walk" );
         }
@@ -86,7 +84,7 @@ function startGame(){
         drawGame();
         beginning++;
 
-        if (beginning == 110){
+        if (beginning == 70){
             clearInterval(beginningLoop);
             mainLoop();
         }

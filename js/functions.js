@@ -233,8 +233,8 @@ $(document).keydown(function(e) {
  function gravity(){
     //  Gravitational acceleration
     gravityVal += gravityChange;
-    if (gravityVal > 9){
-        gravityVal = 9;
+    if (gravityVal > 20){
+        gravityVal = 20;
     }
     //  Gravity acts on player.
     playerPositionY += gravityVal;
@@ -294,7 +294,7 @@ function instructions(){
     // Level 1 instructions, based off of key input.
     if (level == 1){
         if (instructionNumber == 0){
-            $('#instructions').delay(500).fadeIn(500);
+            $('#instructions').fadeIn();
             instructionNumber++;
         }
 
@@ -310,49 +310,59 @@ function instructions(){
             }    
         }
     }
-    if (level ==2){
+    if (level == 2){
         if (instructionNumber == 0){
-            $("#instructions").delay(3000).fadeOut(1000);
-            instructionNumber++;
-            changeInstruction('<h1>Collect 3 blue life pieces to gain a life.</h1>');
-            $("#instructions").delay(3000).fadeOut(1000);
+            $("#instructions").fadeIn();
+            instructionNumber ++;       
         }
+        if (instructionNumber == 1){
+            if (platforms[4].dying == true || platforms[7].dying == true ||platforms[17].dying == true ||platforms[18].dying == true ||platforms[19].dying == true){
+                changeInstruction('<h1> Collect 3 blue life pieces to gain a life.</h1>');
+            }
+        if (instructionNumber == 2){
+            if(lifePieces > 0){
+                changeInstruction('ddww');
+            }
+        }
+    }
     }
     return false;
 }
 
 function changeInstruction(message){
         // Fade instructions in and out. Change text in between.
-        $('#instructions').delay(500).fadeOut(500).delay(500).fadeIn(500);
+        $('#instructions').fadeOut()
         window.setTimeout(function () {
             $("#instructions").html(message);
-        }, 1000);
+            $("#instructions").fadeIn();
+        }, 500);
         instructionNumber ++;
-    return false;
 }
 
 //****************************************************************************************//
 //  Cut Scenes and Bullhonkey  //
 //****************************************************************************************//
+
+
 function earthquakeTime(){
             if (earthquake == 5){
                 earthquake = 1;
             }
             if (earthquake == 1){
-                backPositionX++;
-                backPositionY++;
+                backPositionX += 1.5;
+                backPositionY += 1.5;
             }
             if (earthquake == 2){
-                backPositionX++;
-                backPositionY--;
+                backPositionX += 1.5;
+                backPositionY -= 1.5;
             }
             if (earthquake == 3){
-                backPositionX--;
-                backPositionY--;
+                backPositionX -= 1.5;
+                backPositionY -= 1.5;
             }
             if (earthquake == 4){
-                backPositionX--;
-                backPositionY++;
+                backPositionX -= 1.5;
+                backPositionY += 1.5;
             }
             earthquake++
         }
