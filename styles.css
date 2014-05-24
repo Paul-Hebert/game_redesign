@@ -46,36 +46,131 @@
 
 #player{
 	position:absolute;
-	width:60px;
+	width:55px;
 	height:60px;
 	z-index:1;
 	display:none;
 	box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
-}
-
-.walk{
-	-webkit-animation: walk steps(16) 2s infinite; 
-}
-
-.spriteRight{
-	background:url('imgs/sprites1.png');
+	background:url('imgs/sprites2.png');
+	background-position:-15px -0px;
 }
 
 .spriteLeft{
-	background:url('imgs/sprites2.png');
+	-webkit-animation: spriteLeft steps(16) 2s infinite; 
+	-moz-animation: spriteLeft steps(16) 2s infinite; 
 }
 
-@-webkit-keyframes walk {
-    from { background-position:0px -0px; }
+.spriteRight{
+	-webkit-animation: spriteRight steps(16) 2s infinite; 
+	-moz-animation: spriteRight steps(16) 2s infinite; 
+}
+
+.jumpRight{
+	-webkit-animation: jumpRight steps(16) 2s infinite; 
+	-moz-animation: jumpRight steps(16) 2s infinite; 
+}
+
+.jumpLeft{
+	-webkit-animation: jumpLeft steps(16) 2s infinite; 
+	-moz-animation: jumpLeft steps(16) 2s infinite; 
+}
+
+.stillRight{
+	-webkit-animation: stillRight steps(16) 2s infinite; 
+	-moz-animation: stillRight steps(16) 2s infinite; 
+}
+
+
+@-webkit-keyframes spriteLeft {
+    from { background-position:-15px -0px; }
     to { background-position:-1008px -0px; }
+}
+
+@-moz-keyframes spriteLeft {
+    from { background-position:-15px -0px; }
+    to { background-position:-1008px -0px; }
+}
+
+@-webkit-keyframes spriteRight {
+    from { background-position:-15px -65px; }
+    to { background-position:-1008px -65px; }
+}
+
+@-moz-keyframes spriteRight {
+    from { background-position:-15px -65px; }
+    to { background-position:-1008px -65px; }
+}
+
+@-webkit-keyframes jumpRight {
+    from { background-position:-15px -190px; }
+    to { background-position:-1008px -190px; }
+}
+
+@-moz-keyframes jumpRight {
+    from { background-position:-15px -190px; }
+    to { background-position:-1008px -190px; }
+}
+
+@-webkit-keyframes jumpLeft {
+    from { background-position:-15px -125px; }
+    to { background-position:-1008px -125px; }
+}
+
+@-moz-keyframes jumpLeft {
+    from { background-position:-15px -125px; }
+    to { background-position:-1008px -125px; }
+}
+
+@-webkit-keyframes stillRight {
+    from { background-position:-15px -65px; }
+    to { background-position:-15px -65px; }
+}
+
+@-moz-keyframes stillRight {
+    from { background-position:-15px -65px; }
+    to { background-position:-15px -65px; }
 }
 
 /* Other */
 
-.enemy, .enemy1, .spike{
-	background: red;
+.enemy, .enemy1, .spike, .button{
+	background:url('imgs/sprites2.png');
 	position:absolute;
 	box-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.enemyRight{
+	-webkit-animation: enemyRight steps(5) 2s infinite; 
+	-moz-animation: enemyRight steps(5) 2s infinite; 
+}
+
+@-moz-keyframes enemyRight {
+    from { background-position:-15px 120px; }
+    to { background-position:-1008px 120px; }
+}
+
+@-webkit-keyframes enemyRight {
+    from { background-position:-15px 120px; }
+    to { background-position:-1008px 120px; }
+}
+
+.enemyLeft{
+	-webkit-animation: enemyLeft steps(5) 2s infinite; 
+	-moz-animation: enemyLeft steps(5) 2s infinite; 
+}
+
+@-moz-keyframes enemyLeft {
+    from { background-position:-15px 190px; }
+    to { background-position:-1008px 190px; }
+}
+
+@-webkit-keyframes enemyLeft {
+    from { background-position:-15px 190px; }
+    to { background-position:-1008px 190px; }
+}
+
+.button{
+	background: url('imgs/button.png');
 }
 
 .enemy1{
@@ -84,16 +179,23 @@
 
 .spike{
 	background:url('imgs/spike.png');
-	width:60px;
-	height:60px;
-}
-
-.platform{
 	position:absolute;
-	border:2px solid #000;
 }
 
-.ground{
+.spike1{
+	background:url('imgs/spike.png');
+	position:absolute;
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+}
+
+.platform, .pitcher{
+	position:absolute;
+	background:  #000;
+	z-index:2;
+}
+
+.platform1{
 	position:absolute;
 	border:2px solid #000;
 }
@@ -135,6 +237,11 @@ h1{
 	margin:0px;
 }
 
+.cursor{
+	cursor:pointer;
+	color:red;
+}
+
 .key{
 	padding:5px;
 	padding-left:10px;
@@ -155,6 +262,11 @@ h1{
 	width:30px;
 }
 
+span.enemy{
+	width:89px;
+	height:60px;
+}
+
 #lives{
 	z-index:7;
 	position: absolute;
@@ -167,9 +279,9 @@ h1{
 .life{
 	margin-right:10px;
 	width:40px;
-	height:40px;
+	height:46px;
 	float:right;
-	background: #000;
+	background: url('imgs/life.png');
 }
 
 #lifePieces{
@@ -183,14 +295,14 @@ h1{
 
 .lifePieceSymbol{
 	margin-right:5px;
-	width:20px;
-	height:20px;
+	width:30px;
+	height:30px;
 	float:right;
-	background: blue;
+	background:url('imgs/lifePiece.png');
 }
 
 .lifePiece{
 	position: absolute;
-	background:blue;
+	background:url('imgs/lifePiece.png');
 }
 

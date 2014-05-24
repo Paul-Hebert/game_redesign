@@ -3,6 +3,9 @@
 //****************************************************************************************//
 
 $(function(){
+	map = {68: false, 65: false, 87: false, 37: false, 38: false, 39: false};
+
+	playerDirection = 'right';
 
 	beginning = 0;
 
@@ -19,16 +22,14 @@ $(function(){
 	screenHeight = $("#screen").height();
 
 	//	Character status vars
-	lives = 3;
-	lifePieces = 0;
 
 	playerSpeed = 7;
-	playerWidth = 60;
+	playerWidth = 40;
 	playerHeight=60;
 
 	jumping = 0;
 	jumpVal = 13;
-	jumpLength = 22;
+	jumpLength = 23;
 
 	collision = false;
 	collisionTop = false;
@@ -41,6 +42,18 @@ $(function(){
     player = document.getElementById('player');
 
     backPositionY = 0;
+
+    dying = false;
+
+    enemyJump = false;
+
+    lifePieceRotation = 0;
+
+    overallPositionX = 50;
+
+    moving = false;
+
+ 	enemyJump = false;
 });
 //****************************************************************************************//
 //	Create Platforms	//
@@ -107,12 +120,20 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movement
     }
 }
 
+function createPitcher(i,xVal,yVal,widthVal,heightVal){
+	createObject(i,xVal,yVal,5,heightVal,'platform');
+	i++;
+	createObject(i,xVal+widthVal-5,yVal,5,heightVal,'platform');
+	i++;
+	createObject(i,xVal + 10,yVal+heightVal-15,widthVal - 20,15,'pitcher');
+}
+
 //	Send level info to functions on load.
 
 function createLevel(number) {
 	platforms.length = 0
 						$('.platform, .platform1, .goal, .ground').remove(); /*	For level creation	*/
-	$('.enemy, .enemy1, .lifePiece, .spike').remove();
+	$('.enemy, .enemy1, .lifePiece, .spike, .button, .pitcher').remove();
 	obstacleNumber = 0;
 	i = 0;
 
@@ -155,7 +176,7 @@ function createLevel(number) {
 		backWidth = 1000;
 
 		$('#instructions').html('<h1>Use <span class="key">A</span> and <span class="key">D</span> to move around.</h1>');
-						$('.platform, .platform1, .goal, .ground').remove(); /*	For level creation	*/
+						$('.platform, .platform1, .goal').remove(); /*	For level creation	*/
 	}
 
 	if (number == 2){
@@ -169,13 +190,13 @@ function createLevel(number) {
 	    i++;
 		createObject(i,660,490,70,100,'platform1');
 	    i++;
-		createObject(i,220,494,60,60,'enemy',6,260,'horizontal');
+		createObject(i,220,494,89,60,'enemy',6,260,'horizontal');
 		i++;
 		createObject(i,873,438,212,28,'platform');
 	    i++;
 		createObject(i,964,60,30,30,'lifePiece');
 	    i++;
-		createObject(i,884,378,60,60,'enemy',4,142,'horizontal');
+		createObject(i,1026,378,89,60,'enemy',-3,142,'horizontal');
 	    i++;
 		createObject(i,1475,248,250,362,'platform');
 	    i++;
@@ -193,21 +214,21 @@ function createLevel(number) {
 	    i++;
 		createObject(i,1300,524,250,362,'platform');
 	    i++;
-		createObject(i,2350,88,399,72,'platform1');
-	    i++;
-		createObject(i,1300,470,60,60,'enemy',2,30,'horizontal');
+		createObject(i,2350,88,200,72,'platform1');
 		i++;
-		createObject(i,1475,188,60,60,'enemy',6,125,'horizontal');
+		createObject(i,1475,188,89,60,'enemy',6,125,'horizontal');
 		i++;
-		createObject(i,1820,188,60,60,'enemy',8,350,'horizontal');
+		createObject(i,1820,188,89,60,'enemy',8,350,'horizontal');
 		i++;
 		createObject(i,1800,198,30,30,'lifePiece');
 	    i++;
-		createObject(i,2230,523,30,30,'lifePiece');
+		createObject(i,2220,513,30,30,'lifePiece');
 	    i++;
-		createObject(i,2200,350,150,70,'platform1');
+		createObject(i,2200,350,140,70,'platform1');
 	    i++;
 		createObject(i,2400,28,60,60,'goal');
+	    i++;
+		createPitcher(i,1310,370,79,160);
 
 		instructionTotal = 3;
 
@@ -216,8 +237,9 @@ function createLevel(number) {
 
 		backWidth = 2593;
 
-		$('#instructions').html("<h1>Watch Out! <img src='imgs/enemy.png'/>'s can kill you. Jump on their heads to kill them.</h1>");
-						$('.platform, .platform1, .goal, .ground').remove(); /*	For level creation	*/
+		$('#instructions').html("<h1>Watch Out! <img src='imgs/monster.png'/>s can kill you. Jump on their heads to kill them.</h1>");
+							$('.platform, .platform1, .pitcher').remove(); /*	For level creation	*/
+
 	}
 
 	if (number == 3){
@@ -226,23 +248,52 @@ function createLevel(number) {
 		playerPositionX = 20;
 		playerPositionY = 300;	
 
-		backWidth = 3000;
+		backWidth = 2008;
 
-		createObject(i,0,333,200,100,'platform');
+
+		createObject(i,0,333,450,100,'platform');
 		i++;
 		createObject(i,0,433,70,70,'platform');
 		i++;
-		createObject(i,85,448,40,40,'lifePiece');
+		createObject(i,85,448,30,30,'lifePiece');
 		i++;
 		createObject(i,700,303,102,600,'platform');
 		i++;
+		createObject(i,802,453,202,600,'platform');
+		i++;
+		createObject(i,892,433,60,27,'button',0,9,'vertical');
+		i++;
+		createObject(i,984,303,262,600,'platform');
+		i++;
+		createObject(i,1018,353,174,60,'spike',0,100);
+		i++;
+		createObject(i,-1018,120,174,60,'spike1',0,100);
+		i++;
+		createObject(i,1004,00,132,110,'platform');
+		i++;
+		createObject(i,1008,248,89,60,'enemy',4,138,'horizontal');
+		i++;
+		createObject(i,1206,463,602,223,'platform');
+		i++;
 		createObject(i,000,503,700,600,'platform');
 		i++;
-		createObject(i,600,433,70,70,'enemy1',-4,200,'horizontal');
+		createObject(i,70,450,634,60,'spike',0,'none');
 		i++;
-		createObject(i,200,433,70,70,'enemy1',7,200,'horizontal');
+		createObject(i,1004,-100,202,140,'platform');
 		i++;
-		createObject(i,200,543,500,60,'spike',0,100);
+		createObject(i,1004,110,202,130,'platform');
+		i++;
+		createObject(i,1146,50,30,30,'lifePiece');
+		i++;
+		createObject(i,1608,303,200,330,'platform');
+		i++;
+		createObject(i,1808,0,200,1600,'platform');
+		i++;
+		createObject(i,1308,303,240,100,'platform');
+		i++;
+		createObject(i,1248,403,89,60,'enemy',6,300,'horizontal');
+		i++;
+		createObject(i,1398,403,60,60,'goal');
 	}
 
 	if (number == 4){
@@ -258,9 +309,9 @@ function createLevel(number) {
 		i++;
 		createObject(i,335,503,90,90,'enemy1',2,100,'horizontal');	
 		i++;
-		createObject(i,750,443,60,60,'enemy',5,200,'horizontal');	
+		createObject(i,750,443,89,60,'enemy',5,200,'horizontal');	
 		i++;
-		createObject(i,500,443,60,60,'enemy',2,50,'horizontal');	
+		createObject(i,500,443,89,60,'enemy',2,50,'horizontal');	
 		i++;
 		createObject(i,700,173,532,60,'platform');		
 		i++;
