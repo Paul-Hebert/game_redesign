@@ -8,7 +8,6 @@
 	overflow:hidden;
 	border:3px solid #000;
 	position:absolute;
-
 }
 
 #background, #background img:not(#rocket){
@@ -30,11 +29,11 @@
 }
 
 .back{
-	z-index: 0
+	z-index: 0;
 }
 
 .parallax{
-	z-index:-1;
+	z-index:-2;
 }
 
 /*****************************************************************************************
@@ -140,37 +139,39 @@
 }
 
 .enemyRight{
-	-webkit-animation: enemyRight steps(5) 2s infinite; 
-	-moz-animation: enemyRight steps(5) 2s infinite; 
+	-webkit-animation: enemyRight steps(10) 1.5s infinite; 
+	-moz-animation: enemyRight steps(10) 1.5s infinite; 
 }
 
 @-moz-keyframes enemyRight {
-    from { background-position:-15px 120px; }
-    to { background-position:-1008px 120px; }
+    from { background-position:-0px 120px; }
+    to { background-position:-990px 120px; }
 }
 
 @-webkit-keyframes enemyRight {
-    from { background-position:-15px 120px; }
-    to { background-position:-1008px 120px; }
+    from { background-position:-0px 120px; }
+    to { background-position:-998px 120px; }
 }
 
 .enemyLeft{
-	-webkit-animation: enemyLeft steps(5) 2s infinite; 
-	-moz-animation: enemyLeft steps(5) 2s infinite; 
+	-webkit-animation: enemyLeft steps(10) 1.5s infinite; 
+	-moz-animation: enemyLeft steps(10) 1.5s infinite; 
 }
 
 @-moz-keyframes enemyLeft {
     from { background-position:-15px 190px; }
-    to { background-position:-1008px 190px; }
+    to { background-position:-1005px 190px; }
 }
 
 @-webkit-keyframes enemyLeft {
     from { background-position:-15px 190px; }
-    to { background-position:-1008px 190px; }
+    to { background-position:-1005px 190px; }
 }
 
 .button{
 	background: url('imgs/button.png');
+	z-index:-1;
+
 }
 
 .enemy1{
@@ -180,6 +181,7 @@
 .spike{
 	background:url('imgs/spike.png');
 	position:absolute;
+	z-index:-1;
 }
 
 .spike1{
@@ -227,7 +229,7 @@
 #instructions{
 	z-index:7;
 	position: absolute;
-	top:50px;
+	top:630px;
 	left:50px;
 	width:500px;
 	display:none;
@@ -270,7 +272,7 @@ span.enemy{
 #lives{
 	z-index:7;
 	position: absolute;
-	top:50px;
+	top:630px;
 	left:700px;
 	width:200px;
 	height:100px;
@@ -287,7 +289,7 @@ span.enemy{
 #lifePieces{
 	z-index:7;
 	position: absolute;
-	top:110px;
+	top:690px;
 	left:700px;
 	width:200px;
 	height:100px;

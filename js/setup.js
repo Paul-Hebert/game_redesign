@@ -16,7 +16,6 @@ $(function(){
 	// User input vars
 
 	userInput = false;
-	updated = true;
 
 	screenWidth = $("#screen").width();
 	screenHeight = $("#screen").height();
@@ -86,6 +85,8 @@ function createObject(i,xVal,yVal,widthVal,heightVal,type,movementSpeed,movement
     defineProperty(platforms[i], 'heightVal',heightVal);
     defineProperty(platforms[i], 'type', type);
 	defineProperty(platforms[i], 'dying', false); 
+	defineProperty(platforms[i], 'gravityVal', 1); 
+
 
     if (movementSpeed != null){
 	    defineProperty(platforms[i], 'movementSpeed', movementSpeed);    	
@@ -190,13 +191,13 @@ function createLevel(number) {
 	    i++;
 		createObject(i,660,490,70,100,'platform1');
 	    i++;
-		createObject(i,220,494,89,60,'enemy',6,260,'horizontal');
+		createObject(i,220,494,97,60,'enemy',6,260,'horizontal');
 		i++;
-		createObject(i,873,438,212,28,'platform');
+		createObject(i,873,438,212,28,'platform1');
 	    i++;
 		createObject(i,964,60,30,30,'lifePiece');
 	    i++;
-		createObject(i,1026,378,89,60,'enemy',-3,142,'horizontal');
+		createObject(i,1026,378,97,60,'enemy',-3,142,'horizontal');
 	    i++;
 		createObject(i,1475,248,250,362,'platform');
 	    i++;
@@ -216,9 +217,9 @@ function createLevel(number) {
 	    i++;
 		createObject(i,2350,88,200,72,'platform1');
 		i++;
-		createObject(i,1475,188,89,60,'enemy',6,125,'horizontal');
+		createObject(i,1475,188,97,60,'enemy',6,125,'horizontal');
 		i++;
-		createObject(i,1820,188,89,60,'enemy',8,350,'horizontal');
+		createObject(i,1820,188,97,60,'enemy',8,350,'horizontal');
 		i++;
 		createObject(i,1800,198,30,30,'lifePiece');
 	    i++;
@@ -246,22 +247,27 @@ function createLevel(number) {
 		instructionTotal = 0;
 
 		playerPositionX = 20;
-		playerPositionY = 300;	
+		playerPositionY = 233;	
 
 		backWidth = 2008;
 
-
-		createObject(i,0,333,450,100,'platform');
+		createObject(i,0,263,250,30,'platform');
 		i++;
-		createObject(i,0,433,70,70,'platform');
+		createObject(i,0,363,450,70,'platform');
 		i++;
-		createObject(i,85,448,30,30,'lifePiece');
+		createObject(i,80,303,97,60,'enemy',5,250,'horizontal');
+		i++;
+		createObject(i,0,433,120,70,'platform');
+		i++;		
+		createObject(i,0,293,70,70,'platform');
+		i++;
+		createObject(i,135,448,30,30,'lifePiece');
 		i++;
 		createObject(i,700,303,102,600,'platform');
 		i++;
 		createObject(i,802,453,202,600,'platform');
 		i++;
-		createObject(i,892,433,60,27,'button',0,9,'vertical');
+		createObject(i,892,433,60,27,'button',0,10,'vertical');
 		i++;
 		createObject(i,984,303,262,600,'platform');
 		i++;
@@ -271,13 +277,13 @@ function createLevel(number) {
 		i++;
 		createObject(i,1004,00,132,110,'platform');
 		i++;
-		createObject(i,1008,248,89,60,'enemy',4,138,'horizontal');
+		createObject(i,1008,248,97,60,'enemy',4,138,'horizontal');
 		i++;
 		createObject(i,1206,463,602,223,'platform');
 		i++;
-		createObject(i,000,503,700,600,'platform');
+		createObject(i,000,510,700,600,'platform');
 		i++;
-		createObject(i,70,450,634,60,'spike',0,'none');
+		createObject(i,120,450,584,60,'spike',0,'none');
 		i++;
 		createObject(i,1004,-100,202,140,'platform');
 		i++;
@@ -291,9 +297,13 @@ function createLevel(number) {
 		i++;
 		createObject(i,1308,303,240,100,'platform');
 		i++;
-		createObject(i,1248,403,89,60,'enemy',6,300,'horizontal');
+		createObject(i,1248,403,97,60,'enemy',6,300,'horizontal');
 		i++;
 		createObject(i,1398,403,60,60,'goal');
+		i++;
+		createObject(i,80,318,30,30,'lifePiece');
+						$('.platform, .platform1, .goal').remove(); /*	For level creation	*/
+
 	}
 
 	if (number == 4){
@@ -309,9 +319,9 @@ function createLevel(number) {
 		i++;
 		createObject(i,335,503,90,90,'enemy1',2,100,'horizontal');	
 		i++;
-		createObject(i,750,443,89,60,'enemy',5,200,'horizontal');	
+		createObject(i,750,443,97,60,'enemy',5,200,'horizontal');	
 		i++;
-		createObject(i,500,443,89,60,'enemy',2,50,'horizontal');	
+		createObject(i,500,443,97,60,'enemy',2,50,'horizontal');	
 		i++;
 		createObject(i,700,173,532,60,'platform');		
 		i++;
@@ -332,4 +342,54 @@ function startLevel(){
 		$('#player').fadeIn();
 	}
 }
+
+function startGame(){
+    beginning = 0;
+    createLevel(1);
+    startLevel();
+
+    rocketX = -100;
+    rocketY =100;
+    $('#rocket').fadeIn();
+
+    earthquake = 1;
+
+    lives = 3;
+    lifePieces = 0;
+
+    beginningLoop = setInterval(function(){
+        if (beginning <= 20){
+            $('#rocket').css('top',rocketY);
+            $('#rocket').css('left',rocketX);
+            rocketY +=18;
+            rocketX += 6;
+        }
+
+
+        if (beginning == 40){
+            $('#player').fadeIn();
+        }
+
+        if (beginning <= 43 && beginning >= 20){
+            earthquakeTime();
+        }
+
+        if (beginning > 50){
+            playerPositionX += playerSpeed;
+            $('#player').addClass( "walk" );
+        }
+        
+        drawGame();
+        beginning++;
+
+        if (beginning == 70){
+            clearInterval(beginningLoop);
+            mainLoop();
+        }
+    },1000/20);
+}
+
+$(function (){
+    startGame();
+});
 

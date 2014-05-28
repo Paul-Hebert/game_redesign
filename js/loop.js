@@ -33,7 +33,6 @@
 
 //  draw
     function drawGame(){
-
         background.style.webkitTransform= "translate(" + backPositionX + "px," + backPositionY + "px)";
         parallax.style.webkitTransform= "translate(" + parallaxPositionX + "px)";
 
@@ -62,62 +61,10 @@
 function mainLoop() {
     setInterval( function(){
         updateGame();
-        if (updated){
         	drawGame();
-    	}
-    	updated = false;
         return false;
     },1000/20);
 }
 
-function startGame(){
-    beginning = 0;
-    createLevel(1);
-    startLevel();
-
-    rocketX = -100;
-    rocketY =100;
-    $('#rocket').fadeIn();
-
-    earthquake = 1;
-
-    lives = 3;
-    lifePieces = 0;
-
-    beginningLoop = setInterval(function(){
-        if (beginning <= 20){
-            $('#rocket').css('top',rocketY);
-            $('#rocket').css('left',rocketX);
-            rocketY +=18;
-            rocketX += 6;
-        }
-
-
-        if (beginning == 40){
-            $('#player').fadeIn();
-        }
-
-        if (beginning <= 43 && beginning >= 20){
-            earthquakeTime();
-        }
-
-        if (beginning > 50){
-            playerPositionX += playerSpeed;
-            $('#player').addClass( "walk" );
-        }
-        
-        drawGame();
-        beginning++;
-
-        if (beginning == 70){
-            clearInterval(beginningLoop);
-            mainLoop();
-        }
-    },1000/30);
-}
-
-$(function (){
-    startGame();
-});
 
 

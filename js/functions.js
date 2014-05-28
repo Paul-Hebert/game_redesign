@@ -54,7 +54,6 @@ $(document).keydown(function(e) {
         } else{
             movePlayer('horizontal',speed);
         }
-        updated = true;
     }
    // runSprites(speed);
 
@@ -110,9 +109,10 @@ function collisionTest(identifier,mainWidth,mainHeight,mainX,mainY){
             //  Set mainX based on players position on the screen and the background's position on the screen.
             if (identifier == 'player'){    
                 mainX = playerPositionX - backPositionX;
-                specificCollisionTop = false;
                 specificCollisionBottom = false;
             }
+            specificCollisionTop = false;
+
 
             //  Test for collisions. If true, set collision to true.
             if (mainY >= yVal-2 && mainY <= yVal2 + mainHeight && mainX >= xVal - mainWidth && mainX <= xVal2){
@@ -121,8 +121,8 @@ function collisionTest(identifier,mainWidth,mainHeight,mainX,mainY){
                 }
                 //Check to see if the collision is with the top border.
                 if (mainY - 20 < yVal && platforms[i].type != 'lifePiece'){
+                    specificCollisionTop = true;
                     if (identifier == 'player'){
-                        specificCollisionTop = true;
                         collisionTop = true;
                         playerPositionY = yVal; 
                     }
@@ -209,7 +209,7 @@ function collisionTest(identifier,mainWidth,mainHeight,mainX,mainY){
                             platforms[i].movementSpeed = 3;
                         }
                     } else if (platforms[i].type == "pitcher" && specificCollisionTop == true){
-                        jumping = -50;
+                        jumping = -40;
                         enemyJump = true;
                     }
                 }
@@ -230,7 +230,7 @@ function collisionTest(identifier,mainWidth,mainHeight,mainX,mainY){
 
         //  If there is no collision with the top border, gravity sets in.
         if (collisionTop == false && jumping == 0){
-            gravity();
+            gravity('player');
         } 
         //  Otherwise, reset gravityVal
         else{
@@ -248,7 +248,7 @@ function moveEnemies(){
         xVal2 = platforms[z].xVal + platforms[z].widthVal;
         yVal = platforms[z].yVal;
         yVal2 = platforms[z].yVal + platforms[z].heightVal;
-
+        
         if (platforms[z].movementSpeed != null){
             //  If not dying, walk.
             if (platforms[z].dying == false){
@@ -276,9 +276,8 @@ function moveEnemies(){
                 }
             //If the enemy's dying and on the map, drop.
             } else if(platforms[z].yVal < screenHeight){
-                platforms[z].yVal += 6;
+                gravity(z);
             }
-            updated = true;
             if (platforms[z].type == 'enemy'){
                 collisionTest(z,platforms[z].widthVal,platforms[z].heightVal,xVal,yVal2-10);
                 if (platforms[z].movementSpeed > 0){
@@ -320,15 +319,21 @@ function setSprites(){
 //****************************************************************************************//
 
 
- function gravity(){
-    //  Gravitational acceleration
-    gravityVal += gravityChange;
-    if (gravityVal > 20){
-        gravityVal = 20;
-    }
+ function gravity(identifier){
     //  Gravity acts on player.
-    playerPositionY += gravityVal;
-    updated = true;
+    if (identifier == 'player'){
+        playerPositionY += gravityVal;
+        gravityVal += gravityChange;
+        if (gravityVal > 20){
+            gravityVal = 20;
+        }
+    } else{
+        platforms[identifier].yVal += platforms[identifier].gravityVal;
+        platforms[identifier].gravityVal += gravityChange;
+        if (platforms[identifier].gravityVal > 20){
+            platforms[identifier].gravityVal = 20;
+        }
+    }
     return false;
  }
 
@@ -345,7 +350,6 @@ function setSprites(){
             jumping = 0;
             enemyJump = false;
         }     
-        updated = true
     } else{
         //  Put player behind front layer if landed.
         if (collisionTop == true){
@@ -376,7 +380,7 @@ function lose(){
 }
 
 function die(){
-    gravity();
+    gravity('player');
     if (playerPositionY > screenHeight + 100){
         if (lives <= 0){   
             playerPositionY = -3000;
@@ -411,12 +415,12 @@ function createLife(num){
 //****************************************************************************************//
     function buttonPress(i,direction){
         if (level == 3){
-            if (i == 5){
+            if (i == 8){
                 if (direction == 'press'){
-                    if (platforms[13].movementSpeed == 0){
-                        platforms[7].movementSpeed = -1.5;
-                        platforms[8].movementSpeed = 1.5;
-                        platforms[13].movementSpeed = 4;
+                    if (platforms[16].movementSpeed == 0){
+                        platforms[10].movementSpeed = -1.5;
+                        platforms[11].movementSpeed = 1.5;
+                        platforms[16].movementSpeed = 4;
                     }
                 }
                 if (direction == 'release'){
